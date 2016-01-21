@@ -40,3 +40,25 @@ func (c *App) Index() http.Handler {
 ```
 Pongo's ["first impression template"](./example/views/App/Index.html)'s
 rendering is showed [here](./example/controllers/app.go#L21).
+
+## Customization
+Customize parameters of the controller by adding to your `./config/app.ini`:
+```ini
+[pongoal]
+# A path to the directory with your templates.
+# Default value is "./views/".
+path = /path/to/your/templates  # Default value is "./views/".
+
+# Value of "Content-Type" header when using Render methods.
+# Default value is "text/html; charset=utf-8".
+content.type = plain/text
+
+# When using Render instead of RenderTemplate this template name
+# is used (first value is controller name, second is action name).
+# Default value is "%v/%v.html".
+default.pattern = %v/%v.tpl
+```
+Or alternatively, when running your app you may use flags. E.g.:
+```bash
+./bin/run.exe --pongoal:path=/alternative/path/to/views
+```
