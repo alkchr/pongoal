@@ -1,0 +1,34 @@
+# goal.yml is a configuration file of "goal run" file watcher / task runner.
+init:
+  # Commands of this section will be executed once per start of `goal run`.
+  - /echo "Starting work on 'github.com/alkchr/pongoal/example'"
+  - go get -t github.com/alkchr/pongoal/example/...
+  - /run genHandlers
+  - /run buildApp
+  - /single startApp
+watch:
+  # Watcher commands will be started every time their related files are modified.
+  # "*" at the end of path means watch recursively.
+  ./controllers/*:
+    - /run genHandlers
+    - /start getAssets
+    - /run buildApp
+    - /single startApp
+  ./views/*:
+    - /single startApp
+  ./:
+    - /run buildApp
+    - /single startApp
+  ./routes/*:
+    - /run buildApp
+    - /single startApp
+buildApp:
+  - go build -o ./bin/run:EXT github.com/alkchr/pongoal/example
+getAssets:
+  # Getting dependencies for correct work of autocomplete in editors and IDEs.
+  - go get github.com/alkchr/pongoal/example/assets/...
+startApp:
+  - ./bin/run:EXT
+genHandlers:
+  # Generating handler functions from controllers.
+  - goal generate handlers --input ./controllers/ --output ./assets/handlers/

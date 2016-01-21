@@ -1,0 +1,8 @@
+language: go
+go: 1.5
+install:
+  - export PATH=$PATH:${GOPATH%%:*}/bin:${GOPATH##:*}/bin
+
+  - go get -t github.com/colegion/goal/skeleton/...
+script:
+  - go test -v github.com/colegion/goal/skeleton/...
