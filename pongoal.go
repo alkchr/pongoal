@@ -62,7 +62,11 @@ func (c *Pongo2) RenderTemplate(templatePath string) http.Handler {
 
 			// Execute requested template.
 			if err := t.ExecuteWriter(c.Context, w); err != nil {
-				http.Error(w, fmt.Sprintf(`Failed to execute "%s".`, templatePath), http.StatusInternalServerError)
+				http.Error(
+					w,
+					fmt.Sprintf(`Failed to execute "%s". Error: "%v".`, templatePath, err),
+					http.StatusInternalServerError,
+				)
 			}
 			return
 		}
