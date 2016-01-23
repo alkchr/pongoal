@@ -108,6 +108,7 @@ func (t tControllers) Finally(c *contr.Controllers, w http.ResponseWriter, r *ht
 func Init() {
 	initApp()
 	initControllers()
+	contr.Init()
 }
 
 func initControllers() {
