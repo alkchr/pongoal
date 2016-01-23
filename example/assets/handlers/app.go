@@ -106,13 +106,6 @@ func (t tApp) Index(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-// Init is used to initialize controllers of "github.com/alkchr/pongoal/example/controllers"
-// and its parents.
-func Init() {
-	initApp()
-	initControllers()
-}
-
 func initApp() {
 }
 

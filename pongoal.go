@@ -55,7 +55,7 @@ func (c *Pongo2) RenderTemplate(templatePath string) http.Handler {
 		}
 
 		// If requested template exists, render it.
-		if t, ok := tpls[templatePath]; ok {
+		if t, ok := Templates[templatePath]; ok {
 			// Write necessary headers.
 			w.Header().Set("Content-Type", *contType)
 			w.WriteHeader(c.StatusCode)
@@ -109,9 +109,10 @@ func Init() {
 		if err != nil {
 			log.Printf(`Failed to parse "%s" => "%s". Error: "%v".`, relNorm, p, err)
 		}
-		tpls[relNorm] = t
+		Templates[relNorm] = t
 		return nil
 	})
 }
 
-var tpls = map[string]*pongo2.Template{}
+// Templates stores Pongo2 templates along with their names.
+var Templates = map[string]*pongo2.Template{}
