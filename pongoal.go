@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"net/url"
 	"os"
 	"path/filepath"
 
@@ -87,7 +88,7 @@ func (c *Pongo2) Render() http.Handler {
 }
 
 // Init triggers loading of templates.
-func Init() {
+func Init(_ url.Values) {
 	// Scan requested views directory and its subdirectories for template files.
 	// Ignore errors.
 	dir := filepath.FromSlash(*views)
