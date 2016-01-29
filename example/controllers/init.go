@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"net/url"
 	"os"
 	"path/filepath"
 
@@ -36,17 +37,17 @@ func (c *Controllers) Before() http.Handler {
 }
 
 // Init will create a simple static page.
-func Init() {
+func Init(_ url.Values) {
 	for tplName, destFile := range map[string]string{
 		"App/Index.html": "sample.html",
 	} {
 		err := renderTplToFile("App/Index.html", "sample.html", map[string]interface{}{
 			"key1": "value1",
-			"...":  "...",
+			"smth": "...",
 			"keyN": "valueN",
 		})
 		if err != nil {
-			log.Panicf(`Failed to render "%s" to "%s".`, tplName, destFile)
+			log.Panicf(`Failed to render "%s" to "%s". Error: %v.`, tplName, destFile, err)
 		}
 	}
 }

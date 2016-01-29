@@ -103,14 +103,6 @@ func (t tControllers) Finally(c *contr.Controllers, w http.ResponseWriter, r *ht
 	return
 }
 
-// Init is used to initialize controllers of "github.com/alkchr/pongoal/example/controllers"
-// and its parents.
-func Init() {
-	initApp()
-	initControllers()
-	contr.Init()
-}
-
 func initControllers() {
 	c0.Init()
 	c1.Init()

@@ -4,6 +4,7 @@ package handlers
 
 import (
 	"net/http"
+	"net/url"
 
 	contr "github.com/alkchr/pongoal"
 
@@ -17,6 +18,9 @@ import (
 // Pongo2 is a controller that provides support of pongo2
 // templates to your Goal Toolkit based application.
 var Pongo2 tPongo2
+
+// context stores names of all controllers and packages of the app.
+var context = url.Values{}
 
 // tPongo2 is a type with handler methods of Pongo2 controller.
 type tPongo2 struct {
@@ -129,10 +133,12 @@ func (t tPongo2) Render(w http.ResponseWriter, r *http.Request) {
 // and its parents.
 func Init() {
 	initPongo2()
-	contr.Init()
+	contr.Init(context)
 }
 
 func initPongo2() {
+	context.Add("Pongo2", "RenderTemplate")
+	context.Add("Pongo2", "Render")
 }
 
 func init() {

@@ -4,6 +4,7 @@ package handlers
 
 import (
 	"net/http"
+	"net/url"
 
 	contr "github.com/alkchr/pongoal/example/controllers"
 
@@ -16,6 +17,9 @@ import (
 //
 // App is a sample controller.
 var App tApp
+
+// context stores names of all controllers and packages of the app.
+var context = url.Values{}
 
 // tApp is a type with handler methods of App controller.
 type tApp struct {
@@ -106,7 +110,16 @@ func (t tApp) Index(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+// Init is used to initialize controllers of "github.com/alkchr/pongoal/example/controllers"
+// and its parents.
+func Init() {
+	initApp()
+	initControllers()
+	contr.Init(context)
+}
+
 func initApp() {
+	context.Add("App", "Index")
 }
 
 func init() {
