@@ -29,48 +29,54 @@ type tSessions struct {
 
 // New allocates (github.com/colegion/contrib/controllers/sessions).Sessions controller,
 // then returns it.
-func (t tSessions) New() *contr.Sessions {
-	c := &contr.Sessions{}
+func (t tSessions) New(w http.ResponseWriter, r *http.Request, ctr, act string) *contr.Sessions {
+	c := &contr.Sessions{
+
+		Request: r,
+
+		Response: w,
+	}
 	return c
 }
 
-// Before is a dump method that always returns nil.
-func (t tSessions) Before(c *contr.Sessions, w http.ResponseWriter, r *http.Request) http.Handler {
-	return nil
-}
-
-// After is a dump method that always returns nil.
-func (t tSessions) After(c *contr.Sessions, w http.ResponseWriter, r *http.Request) http.Handler {
-	return nil
-}
-
-// Initially is a method that is started by every handler function at the very beginning
-// of their execution phase.
-func (t tSessions) Initially(c *contr.Sessions, w http.ResponseWriter, r *http.Request, a []string) (finish bool) {
-	// Call magic Initially method of (github.com/colegion/contrib/controllers/sessions).Sessions.
-	return c.Initially(w, r, a)
-}
-
-// Finally is a method that is started by every handler function at the very end
+// Before is a method that is started by every handler function at the very beginning
 // of their execution phase no matter what.
-func (t tSessions) Finally(c *contr.Sessions, w http.ResponseWriter, r *http.Request, a []string) (finish bool) {
-	// Call magic Finally method of (github.com/colegion/contrib/controllers/sessions).Sessions.
+func (t tSessions) Before(c *contr.Sessions, w http.ResponseWriter, r *http.Request) http.Handler {
+
+	// Call magic Before action of (github.com/colegion/contrib/controllers/sessions).Before.
+	if h := c.Before(); h != nil {
+		return h
+	}
+
+	return nil
+}
+
+// After is a method that is started by every handler function at the very end
+// of their execution phase no matter what.
+func (t tSessions) After(c *contr.Sessions, w http.ResponseWriter, r *http.Request) (h http.Handler) {
+
+	// Call magic After method of (github.com/colegion/contrib/controllers/sessions).Sessions.
 	defer func() {
-		if !finish {
-			finish = c.Finally(w, r, a)
+		if h == nil {
+			h = c.After()
 		}
 	}()
+
 	return
 }
 
 // Init is used to initialize controllers of "github.com/colegion/contrib/controllers/sessions"
 // and its parents.
 func Init() {
+
 	initSessions()
+
 	contr.Init(context)
+
 }
 
 func initSessions() {
+
 }
 
 func init() {

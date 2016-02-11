@@ -33,17 +33,20 @@ type Pongo2 struct {
 	// defTpl is a name of the template that will be rendered
 	// if no other templates are specified explicitly.
 	defTpl string
+
+	Action     string `bind:"action"`
+	Controller string `bind:"controller"`
 }
 
-// Initially allocates Context and prepares the name of template to render
+// Before allocates Context and prepares the name of template to render
 // if it isn't specified explicitly.
-func (c *Pongo2) Initially(w http.ResponseWriter, r *http.Request, a []string) bool {
+func (c *Pongo2) Before() http.Handler {
 	// Set the default template to render.
-	c.defTpl = fmt.Sprintf(*defTpl, a[0], a[1])
+	c.defTpl = fmt.Sprintf(*defTpl, c.Controller, c.Action)
 
 	// Allocate a new context.
 	c.Context = pongo2.Context{}
-	return false
+	return nil
 }
 
 // RenderTemplate is an action that gets a path to template

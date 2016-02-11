@@ -29,41 +29,43 @@ type tRequests struct {
 
 // New allocates (github.com/colegion/contrib/controllers/requests).Requests controller,
 // then returns it.
-func (t tRequests) New() *contr.Requests {
-	c := &contr.Requests{}
+func (t tRequests) New(w http.ResponseWriter, r *http.Request, ctr, act string) *contr.Requests {
+	c := &contr.Requests{
+
+		Request: r,
+	}
 	return c
 }
 
-// Before is a dump method that always returns nil.
-func (t tRequests) Before(c *contr.Requests, w http.ResponseWriter, r *http.Request) http.Handler {
-	return nil
-}
-
-// After is a dump method that always returns nil.
-func (t tRequests) After(c *contr.Requests, w http.ResponseWriter, r *http.Request) http.Handler {
-	return nil
-}
-
-// Initially is a method that is started by every handler function at the very beginning
-// of their execution phase.
-func (t tRequests) Initially(c *contr.Requests, w http.ResponseWriter, r *http.Request, a []string) (finish bool) {
-	// Call magic Initially method of (github.com/colegion/contrib/controllers/requests).Requests.
-	return c.Initially(w, r, a)
-}
-
-// Finally is a method that is started by every handler function at the very end
+// Before is a method that is started by every handler function at the very beginning
 // of their execution phase no matter what.
-func (t tRequests) Finally(c *contr.Requests, w http.ResponseWriter, r *http.Request, a []string) (finish bool) {
+func (t tRequests) Before(c *contr.Requests, w http.ResponseWriter, r *http.Request) http.Handler {
+
+	// Call magic Before action of (github.com/colegion/contrib/controllers/requests).Before.
+	if h := c.Before(); h != nil {
+		return h
+	}
+
+	return nil
+}
+
+// After is a method that is started by every handler function at the very end
+// of their execution phase no matter what.
+func (t tRequests) After(c *contr.Requests, w http.ResponseWriter, r *http.Request) (h http.Handler) {
+
 	return
 }
 
 // Init is used to initialize controllers of "github.com/colegion/contrib/controllers/requests"
 // and its parents.
 func Init() {
+
 	initRequests()
+
 }
 
 func initRequests() {
+
 }
 
 func init() {

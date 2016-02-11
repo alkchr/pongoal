@@ -28,36 +28,37 @@ type tPongo2 struct {
 
 // New allocates (github.com/alkchr/pongoal).Pongo2 controller,
 // then returns it.
-func (t tPongo2) New() *contr.Pongo2 {
-	c := &contr.Pongo2{}
+func (t tPongo2) New(w http.ResponseWriter, r *http.Request, ctr, act string) *contr.Pongo2 {
+	c := &contr.Pongo2{
+
+		Action: act,
+
+		Controller: ctr,
+	}
 	return c
 }
 
-// Before is a dump method that always returns nil.
-func (t tPongo2) Before(c *contr.Pongo2, w http.ResponseWriter, r *http.Request) http.Handler {
-	return nil
-}
-
-// After is a dump method that always returns nil.
-func (t tPongo2) After(c *contr.Pongo2, w http.ResponseWriter, r *http.Request) http.Handler {
-	return nil
-}
-
-// Initially is a method that is started by every handler function at the very beginning
-// of their execution phase.
-func (t tPongo2) Initially(c *contr.Pongo2, w http.ResponseWriter, r *http.Request, a []string) (finish bool) {
-	// Call magic Initially method of (github.com/alkchr/pongoal).Pongo2.
-	return c.Initially(w, r, a)
-}
-
-// Finally is a method that is started by every handler function at the very end
+// Before is a method that is started by every handler function at the very beginning
 // of their execution phase no matter what.
-func (t tPongo2) Finally(c *contr.Pongo2, w http.ResponseWriter, r *http.Request, a []string) (finish bool) {
+func (t tPongo2) Before(c *contr.Pongo2, w http.ResponseWriter, r *http.Request) http.Handler {
+
+	// Call magic Before action of (github.com/alkchr/pongoal).Before.
+	if h := c.Before(); h != nil {
+		return h
+	}
+
+	return nil
+}
+
+// After is a method that is started by every handler function at the very end
+// of their execution phase no matter what.
+func (t tPongo2) After(c *contr.Pongo2, w http.ResponseWriter, r *http.Request) (h http.Handler) {
+
 	return
 }
 
 // RenderTemplate is a handler that was generated automatically.
-// It calls Before, After, Finally methods, and RenderTemplate action found at
+// It calls Before, After methods, and RenderTemplate action found at
 // github.com/alkchr/pongoal/pongoal.go
 // in appropriate order.
 //
@@ -65,34 +66,27 @@ func (t tPongo2) Finally(c *contr.Pongo2, w http.ResponseWriter, r *http.Request
 // and renders it using data from Context.
 func (t tPongo2) RenderTemplate(w http.ResponseWriter, r *http.Request) {
 	var h http.Handler
-	c := Pongo2.New()
+	c := Pongo2.New(w, r, "Pongo2", "RenderTemplate")
 	defer func() {
 		if h != nil {
 			h.ServeHTTP(w, r)
 		}
 	}()
-	a := []string{"Pongo2", "RenderTemplate"}
-	defer Pongo2.Finally(c, w, r, a)
-	if finish := Pongo2.Initially(c, w, r, a); finish {
-		return
-	}
+	defer Pongo2.After(c, w, r)
 	if res := Pongo2.Before(c, w, r); res != nil {
 		h = res
 		return
 	}
-	if res := c.RenderTemplate( // "Binding" parameters.
+	if res := c.RenderTemplate(
 		strconv.String(r.Form, "templatePath"),
 	); res != nil {
 		h = res
 		return
 	}
-	if res := Pongo2.After(c, w, r); res != nil {
-		h = res
-	}
 }
 
 // Render is a handler that was generated automatically.
-// It calls Before, After, Finally methods, and Render action found at
+// It calls Before, After methods, and Render action found at
 // github.com/alkchr/pongoal/pongoal.go
 // in appropriate order.
 //
@@ -104,41 +98,39 @@ func (t tPongo2) RenderTemplate(w http.ResponseWriter, r *http.Request) {
 //	default.pattern = %s/%s.tpl
 func (t tPongo2) Render(w http.ResponseWriter, r *http.Request) {
 	var h http.Handler
-	c := Pongo2.New()
+	c := Pongo2.New(w, r, "Pongo2", "Render")
 	defer func() {
 		if h != nil {
 			h.ServeHTTP(w, r)
 		}
 	}()
-	a := []string{"Pongo2", "Render"}
-	defer Pongo2.Finally(c, w, r, a)
-	if finish := Pongo2.Initially(c, w, r, a); finish {
-		return
-	}
+	defer Pongo2.After(c, w, r)
 	if res := Pongo2.Before(c, w, r); res != nil {
 		h = res
 		return
 	}
-	if res := c.Render( // "Binding" parameters.
-	); res != nil {
+	if res := c.Render(); res != nil {
 		h = res
 		return
-	}
-	if res := Pongo2.After(c, w, r); res != nil {
-		h = res
 	}
 }
 
 // Init is used to initialize controllers of "github.com/alkchr/pongoal"
 // and its parents.
 func Init() {
+
 	initPongo2()
+
 	contr.Init(context)
+
 }
 
 func initPongo2() {
+
 	context.Add("Pongo2", "RenderTemplate")
+
 	context.Add("Pongo2", "Render")
+
 }
 
 func init() {
